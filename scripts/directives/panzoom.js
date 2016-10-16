@@ -47,7 +47,7 @@ function ($document, PanZoomService) {
                         };
 
                         // initialize models. Use passed properties when available, otherwise revert to defaults
-                        // NOTE: all times specified in seconds, all distances specified in pixels                        
+                        // NOTE: all times specified in seconds, all distances specified in pixels
                         $scope.config.disableZoomAnimation = $scope.config.disableZoomAnimation !== undefined ? $scope.config.disableZoomAnimation : false;
                         $scope.config.zoomLevels = $scope.config.zoomLevels !== undefined ? $scope.config.zoomLevels : 5;
                         $scope.config.neutralZoomLevel = $scope.config.neutralZoomLevel !== undefined ? $scope.config.neutralZoomLevel : 2;
@@ -82,6 +82,7 @@ function ($document, PanZoomService) {
                         $scope.config.invertMouseWheel = $scope.config.invertMouseWheel !== undefined ? $scope.config.invertMouseWheel : false;
 
                         $scope.config.chromeUseTransform = $scope.config.chromeUseTransform ? $scope.config.chromeUseTransform : false;
+                        $scope.config.disablePanZoom = $scope.config.disablePanZoom ? $scope.config.disablePanZoom : false;
 
 
                         var calcZoomToFit = function (rect) {
@@ -226,6 +227,9 @@ function ($document, PanZoomService) {
                         };
 
                         var changeZoomLevel = function (newZoomLevel, clickPoint, duration) {
+                            if($scope.config.disablePanZoom){
+                                return;
+                            }
                             // cancel any existing zoom animation
                             if ($scope.zoomAnimation) {
                                 $scope.base.zoomLevel = $scope.model.zoomLevel;
@@ -342,6 +346,9 @@ function ($document, PanZoomService) {
                         };
 
                         var zoomToFit = function (rectangle) {
+                            if($scope.config.disablePanZoom){
+                                return;
+                            }
                             // example rectangle: { "x": 0, "y": 100, "width": 100, "height": 100 }
                             $scope.base = calcZoomToFit(rectangle);
                             syncModelToDOM();
