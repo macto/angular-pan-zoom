@@ -10,12 +10,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 </head>
 
-<body ng-controller="TestController">
+<body ng-controller="TestController" ng-init="width=800;height=600;">
     <div style="position:relative">
         <panzoomwidget panzoom-id="PanZoom" style="position:absolute;top:10px;left:10px;z-index:1"></panzoomwidget>
-        <panzoom id="PanZoom" config="panzoomConfig" model="panzoomModel" style="width:800px; height: 600px">
+        <panzoom id="PanZoom" config="panzoomConfig" model="panzoomModel" ng-style="{'width':width + 'px','height':height + 'px',}">
             <img src="images/shark_attack.jpg" style="position:absolute" />
-            <svg style="position:absolute" width="800px" height="600px">
+            <svg style="position:absolute">
                 <rect ng-repeat="rect in rects" ng-attr-x="{{rect.x}}" ng-attr-y="{{rect.y}}" ng-attr-width="{{rect.width}}" ng-attr-height="{{rect.height}}" rx="10" ry="10" style="fill:none;stroke-width:2;stroke:rgb(255,0,0)" />
             </svg>
         </panzoom>
@@ -26,6 +26,9 @@
     <button type="button" class="btn" ng-click="zoomToLadder()">Zoom to ladder</button>
     <button type="button" ng-show="!panzoomConfig.disablePanZoom" class="btn" ng-click="panzoomConfig.disablePanZoom = true">Disable Pan Zoom</button>
     <button type="button" ng-show="!!panzoomConfig.disablePanZoom" class="btn" ng-click="panzoomConfig.disablePanZoom = false">Enable Pan Zoom</button>
+    <input type="number" ng-model="width" />
+    <input type="number" ng-model="height" />
+
 </body>
 
 <script src="../bower_components/jQuery/dist/jquery.js"></script>

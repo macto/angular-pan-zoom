@@ -8,8 +8,8 @@ angular.module('panzoom', ['monospaced.mousewheel'])
     .directive('panzoom', ['$document', 'PanZoomService',
 function ($document, PanZoomService) {
             var api = {};
-            var viewportHeight;
-            var viewportWidth;            
+            var viewportHeight, totalHeight;
+            var viewportWidth, totalWidth;
 
             return {
                 restrict: 'E',
@@ -148,7 +148,7 @@ function ($document, PanZoomService) {
                                 if ($scope.config.keepInBounds) {
                                     var topLeftCornerView = getViewPosition({ x: 0, y: 0 });
                                     var bottomRightCornerView = getViewPosition({ x: viewportWidth, y: viewportHeight });
-        
+
                                     if (topLeftCornerView.x > 0) {
                                         $scope.model.pan.x = 0;
                                     }
@@ -214,7 +214,20 @@ function ($document, PanZoomService) {
                                 panElementDOM.style.mozTransform = translate;
                             } else {
                                 panElementDOM.style.left = $scope.model.pan.x + 'px';
-                                panElementDOM.style.top = $scope.model.pan.y + 'px';    
+                                panElementDOM.style.top = $scope.model.pan.y + 'px';
+
+                                if($scope.model.pan.x + (viewportWidth)*scale < totalWidth){
+                                    panElementDOM.style.left = ($scope.model.pan.x + totalWidth - ($scope.model.pan.x + (viewportWidth)*scale)) + 'px';
+                                    if(($scope.model.pan.x + totalWidth - ($scope.model.pan.x + (viewportWidth)*scale)) > 0){
+                                        zoomIn();
+                                    }
+                                }
+                                if($scope.model.pan.y + (viewportHeight)*scale < totalHeight){
+                                    panElementDOM.style.top = ($scope.model.pan.y + totalHeight - ($scope.model.pan.y + (viewportHeight)*scale)) + 'px';
+                                    if(($scope.model.pan.y + totalHeight - ($scope.model.pan.y + (viewportHeight)*scale)) > 0){
+                                        zoomIn();
+                                    }
+                                }
                             }
                         };
 
@@ -703,6 +716,21 @@ function ($document, PanZoomService) {
                             getViewPosition: getViewPosition,
                             getModelPosition: getModelPosition
                         };
+
+
+                        $scope.$watch(
+                            function () {
+                                return {
+                                    width: $element.width(),
+                                    height: $element.height(),
+                                }
+                            },
+                            function (newValue) {
+                                totalWidth = newValue.width;
+                                totalHeight = newValue.height;
+                            },
+                            true
+                        );
 
         }],
                 link: function (scope, element, attrs) {
