@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
+    <script data-require="angular.js@1.5.8" data-semver="1.5.8" src="https://code.angularjs.org/1.5.8/angular.js"></script>
+
+    <link data-require="bootstrap-css@3.3.6" data-semver="3.3.6" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" />
+    <link href="https://rawgit.com/kapil2708/angular-pan-zoom/master/release/panzoomwidget.css" rel="stylesheet" type="text/css" />
+
+    <script src="../bower_components/jQuery/dist/jquery.js"></script>
+    <script src="../bower_components/hamsterjs/hamster.js"></script>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="https://rawgit.com/kapil2708/angular-resizable/master/src/angular-resizable.js"></script>
+    <script src="../bower_components/angular-mousewheel/mousewheel.js"></script>
+
+    <script src="../scripts/directives/panzoom.js"></script>
+    <script src="../scripts/services/PanZoomService.js"></script>
+    <script src="../scripts/directives/panzoomwidget.js"></script>
+
+    <link href="https://rawgit.com/kapil2708/angular-resizable/master/src/angular-resizable.css" rel="stylesheet" />
+    <style>
+
+        .pan-zoom-frame {
+            cursor: move;
+        }
+        .no-edit,.no-edit .pan-zoom-frame  {
+            cursor: pointer!important;
+        }
+        .no-edit .rg-bottom,.no-edit .rg-top,.no-edit .rg-right,.no-edit .rg-left {
+            cursor:pointer;
+        }
+        .no-edit .rg-bottom span,.no-edit .rg-top span,.no-edit .rg-right span,.no-edit .rg-left span {
+            border-width: 0;
+        }
+        .img-box-container {
+            flex: 1;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: space-around;
+            align-content: space-around;
+            width:800px;
+            height:300px;
+            box-sizing:border-box;
+            overflow:hidden;
+        }
+
+        .row2 {
+            min-height: 75px;
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-around;
+            align-content: space-around;
+            flex:1;
+            height:auto;
+            background: #fff;
+        }
+
+
+        .row2.resizable {
+            -webkit-box-flex: 0;
+            -webkit-flex: 0 1 auto;
+            -ms-flex: 0 1 auto;
+            flex: 0 1 auto;
+        }
+        section {
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: space-around;
+            align-content: space-around;
+            box-sizing: border-box;
+            border-radius: 10px;
+            /*padding: 1.25em 1.75em;*/
+            background: #ddd;
+            border: 4px solid #fff;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            min-width: 75px;
+
+        }
+        section.resizable {
+            -webkit-box-flex: 0;
+            -webkit-flex: 0 1 auto;
+            -ms-flex: 0 1 auto;
+            flex: 0 1 auto;
+        }
+
+        section.noborder {
+            border: none;
+        }
+        .panzoom {
+            border-radius:4px;
+        }
+
+        section.noborder .rg-right {
+            right: 4px;
+        }
+
+        .editbutton {
+            background-color:white;
+            opacity:0.7;
+            position:absolute;
+            right: 15px;
+            top: 15px;
+            cursor: pointer;
+        }
+
+        .editactive, .editactive:hover, .editactive:focus {
+            background-color: #E67F22;
+            color:white;
+            opacity: 1;
+        }
+        .editlayout {
+            background-color:white;
+            opacity:0.7;
+            position:absolute;
+            right: 15px;
+            top: 45px;
+        }
+    </style>
+</head>
+
+<body ng-app="myApp">
+<div ng-controller="albumViewController">
+    <h1>Testing Angular PanZoom/Resizable</h1>
+    <!--<div style="position:relative;display: flex; width: 300px; height: 300px" ng-class="!editAlbumPreview?'no-edit':'';">-->
+    <div style="position:relative;" ng-class="!editAlbumPreview?'no-edit':'';">
+        <div class="img-box-container">
+            <div class="row2">
+                <section resizable="" r-directions="['right']" r-flex="true" r-disable-resize="disableResizing" id="x2awidth">
+                    <panzoom id="PanZoom8" config="panzoomConfig" model="panzoomModel8" ng-style="{'width':(preview.DomIds.x2awidth.width -6) + 'px','height':'292px'}" >
+                        <img src="images/200.jpg" style="position:absolute" />
+                    </panzoom>
+                </section>
+                <section>
+                    <panzoom id="PanZoom9" config="panzoomConfig" model="panzoomModel9" style="height: 292px" ng-style="{'width':(790 - preview.DomIds.x2awidth.width) + 'px'}" >
+                        <img src="images/201.jpg" style="position:absolute" />
+                    </panzoom>
+                </section>
+            </div>
+        </div>
+        <a class="material-icons editbutton" data-toggle="tooltip" ng-click="
+      disableResizing = !disableResizing;editAlbumPreview = !editAlbumPreview; 
+      
+      $event.stopPropagation(); 
+      " ng-class="{editactive:editAlbumPreview}">edit</a>
+    </div>
+    {{preview.DomIds.x2awidth.width -6}}
+</div>
+
+<script>
+    // Code goes here
+    var myApp = angular.module('myApp', ['angularResizable', 'panzoom', 'panzoomwidget', 'monospaced.mousewheel']);
+
+    // Create the controller, the 'ToddlerCtrl' parameter
+    // must match an ng-controller directive
+    myApp
+            .controller("albumViewController", ["$scope", albumViewController])
+
+
+    function albumViewController($scope) {
+
+        $scope.disableResizing = true;
+        $scope.image1bkgurl = 'https://unsplash.it/500/600';
+        $scope.image2bkgurl = 'https://unsplash.it/800/400';
+        $scope.preview = {};
+        $scope.preview.DomIds = [];
+        $scope.preview.DomIds.x2awidth = [];
+        $scope.preview.DomIds.x2awidth.width = 410;
+
+        $scope.panzoomConfig = {
+            zoomLevels: 12,
+            //neutralZoomLevel: 5,
+            scalePerZoomLevel: 1.5,
+            disablePanZoom: false,
+            keepInBounds: true,
+            modelChangedCallback: function(model, event) {
+                // $scope.updatePreview();
+            }
+        };
+
+        $scope.panzoomModel8 = {};
+        $scope.panzoomModel9 = {};
+
+        $scope.$on("angular-resizable.resizeEnd", function(event, args) {
+
+            var someTempObject = {
+                'width': args.width,
+                'height': args.height
+            };
+            console.log(args.id);
+            $scope.preview.DomIds[args.id] = someTempObject;
+            console.log($scope.preview.DomIds[args.id]);
+            //$scope.updatePreview();
+            //console.log(args);
+        });
+    }
+</script>
+</body>
+
+</html>
