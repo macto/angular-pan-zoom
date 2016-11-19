@@ -147,7 +147,6 @@
       $event.stopPropagation(); 
       " ng-class="{editactive:editAlbumPreview}">edit</a>
     </div>
-    {{preview.DomIds.x2awidth.width -6}}
 </div>
 
 <script>
@@ -190,11 +189,7 @@
                 'width': args.width,
                 'height': args.height
             };
-            console.log(args.id);
             $scope.preview.DomIds[args.id] = someTempObject;
-            console.log($scope.preview.DomIds[args.id]);
-            //$scope.updatePreview();
-            //console.log(args);
         });
     }
 </script>
