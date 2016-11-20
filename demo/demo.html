@@ -11,10 +11,9 @@
 </head>
 
 <body ng-controller="TestController">
-    <div style="position:relative">
+    <div style="position:relative" ng-init="imageUrl='images/shark_attack.jpg'">
         <panzoomwidget panzoom-id="PanZoom" style="position:absolute;top:10px;left:10px;z-index:1"></panzoomwidget>
-        <panzoom id="PanZoom" config="panzoomConfig" model="panzoomModel" style="width:800px; height: 600px">
-            <img src="images/shark_attack.jpg" style="-webkit-user-drag: none" />
+        <panzoom id="PanZoom" config="panzoomConfig" model="panzoomModel" style="width:800px; height: 600px" image-src="imageUrl">
         </panzoom>
     </div>
     <button type="button" ng-show="!panzoomConfig.disablePanZoom" class="btn" ng-click="panzoomConfig.disablePanZoom = true">Disable Pan Zoom</button>
