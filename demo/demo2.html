@@ -125,18 +125,16 @@
 <body ng-app="myApp">
 <div ng-controller="albumViewController">
     <h1>Testing Angular PanZoom/Resizable</h1>
-    <!--<div style="position:relative;display: flex; width: 300px; height: 300px" ng-class="!editAlbumPreview?'no-edit':'';">-->
-    <div style="position:relative;" ng-class="!editAlbumPreview?'no-edit':'';">
+    <div style="position:relative;display: flex;width: 800px; height: 300px" ng-class="!editAlbumPreview?'no-edit':'';">
         <div class="img-box-container">
             <div class="row2">
                 <section resizable="" r-directions="['right']" r-flex="true" r-disable-resize="disableResizing" id="x2awidth">
-                    <panzoom id="PanZoom8" config="panzoomConfig" model="panzoomModel8" ng-style="{'width':(preview.DomIds.x2awidth.width -6) + 'px','height':'292px'}" >
-                        <img src="images/200.jpg" style="position:absolute" />
+                    <panzoom id="PanZoom8" config="panzoomConfig" model="panzoomModel8" ng-style="{'width':(preview.DomIds.x2awidth.width -6) + 'px','height':'292px'}" image-src="image1bkgurl">
+
                     </panzoom>
                 </section>
                 <section>
-                    <panzoom id="PanZoom9" config="panzoomConfig" model="panzoomModel9" style="height: 292px" ng-style="{'width':(790 - preview.DomIds.x2awidth.width) + 'px'}" >
-                        <img src="images/201.jpg" style="position:absolute" />
+                    <panzoom id="PanZoom9" config="panzoomConfig" model="panzoomModel9" style="height: 292px" ng-style="{'width':(790 - preview.DomIds.x2awidth.width) + 'px'}" image-src="image2bkgurl" >
                     </panzoom>
                 </section>
             </div>
@@ -162,8 +160,8 @@
     function albumViewController($scope) {
 
         $scope.disableResizing = true;
-        $scope.image1bkgurl = 'https://unsplash.it/500/600';
-        $scope.image2bkgurl = 'https://unsplash.it/800/400';
+        $scope.image1bkgurl = 'https://unsplash.it/400/400';
+        $scope.image2bkgurl = 'images/201.jpg';
         $scope.preview = {};
         $scope.preview.DomIds = [];
         $scope.preview.DomIds.x2awidth = [];
