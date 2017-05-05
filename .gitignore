@@ -1,4 +1,7 @@
 node_modules
+bower_components
 target
 build
 npm-debug.log
+.settings
+.idea
